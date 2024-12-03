@@ -21,13 +21,13 @@ export const paths = {
         path: 'points',
         getHref: () => 'leaderboard/points',
       },
-      users: {
-        path: 'users',
-        getHref: () => '/app/users',
+      stars: {
+        path: 'stars',
+        getHref: () => 'leaderboard/stars',
       },
-      profile: {
-        path: 'profile',
-        getHref: () => '/app/profile',
+      table: {
+        path: 'table',
+        getHref: () => 'leaderboard/table',
       },
     },
   } as const;

@@ -42,6 +42,22 @@ export const createAppRouter = (queryClient: QueryClient) =>
           ErrorBoundary: AppRootErrorBoundary,
         },
         {
+          path: paths.app.table.path,
+          lazy: async () => {
+            const { TableRoute } = await import('./routes/table/table-page.tsx');
+            return { Component: TableRoute };
+          },
+          ErrorBoundary: AppRootErrorBoundary,
+        },
+        {
+          path: paths.app.stars.path,
+          lazy: async () => {
+            const { StarsRoute } = await import('./routes/stars/stars-route.tsx');
+            return { Component: StarsRoute };
+          },
+          ErrorBoundary: AppRootErrorBoundary,
+        },
+        {
           path: paths.app.heatmap.path,
           lazy: async () => {
             const { LeaderboardHeatmapRoute } = await import('./routes/heatmap/heatmap-page.tsx');
