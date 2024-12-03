@@ -6,6 +6,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { MainErrorFallback } from '@/components/errors/main';
 import { LoaderCircle } from 'lucide-react';
 import { queryConfig } from '@/lib/react-query';
+import { LeaderboardProvider } from '@/features/leaderboard/context/leaderboard-context';
 
 
 type AppProviderProps = {
@@ -31,8 +32,10 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       <ErrorBoundary FallbackComponent={MainErrorFallback}>
         <HelmetProvider>
           <QueryClientProvider client={queryClient}>
+          <LeaderboardProvider>
             {import.meta.env.DEV && <ReactQueryDevtools />}
               {children}
+              </LeaderboardProvider>
           </QueryClientProvider>
         </HelmetProvider>
       </ErrorBoundary>

@@ -1,26 +1,44 @@
-import { motion } from 'framer-motion'
-import { Button } from '@/components/ui/button'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { ChevronLeft, Home, Table, Waves, Menu, ChartNoAxesColumn, ChartSpline, Hourglass, Star } from 'lucide-react'
-import { cn } from '@/utils/cn'
-import { paths } from '@/config/paths'
-import { PanelLeft } from 'lucide-react' // Add this import
-
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { useLocation, useNavigate } from "react-router-dom";
+import {
+  ChevronLeft,
+  X,
+  Home,
+  Table,
+  Waves,
+  Menu,
+  ChartNoAxesColumn,
+  ChartSpline,
+  Hourglass,
+  Star,
+} from "lucide-react";
+import { cn } from "@/utils/cn";
+import { paths } from "@/config/paths";
+import { PanelLeft } from "lucide-react";
 
 interface SidebarProps {
-  isOpen: boolean
-  setIsOpen: (open: boolean) => void
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
 }
 
 const navItems = [
-  { icon: Home, label: 'Overview', path: paths.app.root.path },
-  { icon: Table, label: 'Data Tables', path: paths.app.table.path },
-  { icon: ChartSpline, label: 'Delta Stats', path: paths.app.delta.path },
-  { icon: Waves, label: 'Heatmaps', path: paths.app.heatmap.path },
-  { icon: ChartNoAxesColumn, label: 'Points Stats', path: paths.app.points.path },
-  { icon: Star, label: 'Star Completion', path: paths.app.stars.path },
-  { icon: Hourglass, label: 'Time per Star', path: paths.app.root.path + '/time' },
-]
+  { icon: Home, label: "Overview", path: paths.app.root.path },
+  { icon: Table, label: "Data Tables", path: paths.app.table.path },
+  { icon: ChartSpline, label: "Delta Stats", path: paths.app.delta.path },
+  { icon: Waves, label: "Heatmaps", path: paths.app.heatmap.path },
+  {
+    icon: ChartNoAxesColumn,
+    label: "Points Stats",
+    path: paths.app.points.path,
+  },
+  { icon: Star, label: "Star Completion", path: paths.app.stars.path },
+  {
+    icon: Hourglass,
+    label: "Time per Star",
+    path: paths.app.root.path + "/time",
+  },
+];
 
 export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
   const navigate = useNavigate();
@@ -28,59 +46,37 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
 
   return (
     <motion.aside
-      initial={{ width: isOpen ? 256 : 57 }}
-      animate={{ width: isOpen ? 256 : 57 }}
+      initial={{ width: isOpen ? 320 : 72 }}
+      animate={{ width: isOpen ? 320 : 72 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
-      className="top-0 left-0 fixed flex flex-col bg-card border-r h-screen"
+      className="top-0 left-0 fixed flex flex-col bg-background border-r-4 border-foreground h-screen font-['Inter',helvetica,sans-serif]"
     >
-      <div className="flex items-center px-3 border-b h-14">
-        {isOpen && (
-          <div className="flex flex-col items-start">
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="font-bold text-foreground text-sm"
-            >
-              Advent of Code Stats
-            </motion.span>
-            <motion.span
-              initial={false}
-              animate={{
-                opacity: isOpen ? 1 : 0,
-                width: isOpen ? "auto" : 0,
-              }}
-              transition={{ duration: 0.2 }}
-              className={cn(
-                "text-xs overflow-hidden whitespace-nowrap",
-              )}
-            >
-              made by <a href="https://github.com/nulzo" className="font-bold text-primary">@nulzo</a>
-            </motion.span>
-          </div>
-        )}
+      {/* Header */}
+      <div className="flex items-center h-20 border-b-2 border-black px-4">
+        <div className="flex items-center overflow-hidden">
+          <motion.div
+            initial={{ opacity: isOpen ? 1 : 0, width: isOpen ? "auto" : 0 }}
+            animate={{ opacity: isOpen ? 1 : 0, width: isOpen ? "auto" : 0 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="whitespace-nowrap overflow-hidden"
+          >
+            <h1 className="font-bold text-xl">Advent of Code</h1>
+            <span className="text-sm font-medium">Statistics Dashboard</span>
+          </motion.div>
+        </div>
+
         <Button
           variant="ghost"
           size="icon"
           onClick={() => setIsOpen(!isOpen)}
-          className={cn(
-            "h-8 w-8 rounded-lg",
-            "hover:bg-accent/50",
-            isOpen ? "ml-auto" : "mx-auto" // Centers button when closed, pushes to right when open
-          )}
-          aria-label={isOpen ? "Collapse sidebar" : "Expand sidebar"}
+          className="h-10 w-10 rounded-non ml-auto"
         >
-          <motion.div
-            animate={{ rotate: isOpen ? 0 : 180 }}
-            transition={{ duration: 0.2 }}
-          >
-            <PanelLeft size={16} />
-          </motion.div>
+          {isOpen ? <X size={18} /> : <Menu size={18} />}
         </Button>
       </div>
 
-      <nav className="flex-1 space-y-1 px-2 py-4">
+      {/* Navigation */}
+      <nav className="flex-1 p-4 space-y-2">
         {navItems.map((item) => {
           const isActive = location.pathname === item.path;
 
@@ -89,37 +85,35 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
               key={item.label}
               variant="ghost"
               className={cn(
-                "w-full relative h-10",
-                "hover:bg-accent/50 flex items-center justify-start", // Changed to justify-start
-                isActive && "bg-accent/60 hover:bg-accent/60",
-                "pl-3 pr-4" // Fixed left padding for consistent icon placement
+                "w-full h-10 rounded-none border-2",
+                "flex items-center justify-start px-4", // Always left-aligned
+                isActive
+                  ? "border-black bg-black text-white"
+                  : "border-transparent hover:border-black hover:bg-transparent"
               )}
               onClick={() => navigate(item.path)}
             >
-              {/* Left-justified icon */}
-              <item.icon
-                size={18}
-                className={cn(
-                  "shrink-0",
-                  isActive ? "text-primary" : "text-muted-foreground"
-                )}
-              />
+              <div className="flex items-center gap-4">
+                <item.icon
+                  size={18}
+                  className={cn(
+                    "shrink-0",
+                    isActive ? "text-white" : "text-black"
+                  )}
+                />
 
-              {/* Text appears directly after icon */}
-              <motion.span
-                initial={false}
-                animate={{
-                  opacity: isOpen ? 1 : 0,
-                  width: isOpen ? "auto" : 0,
-                }}
-                transition={{ duration: 0.2 }}
-                className={cn(
-                  "ml-3 text-sm overflow-hidden whitespace-nowrap",
-                  isActive ? "text-primary" : "text-muted-foreground"
-                )}
-              >
-                {item.label}
-              </motion.span>
+                <motion.span
+                  initial={{ opacity: 0, width: 0 }}
+                  animate={{
+                    opacity: isOpen ? 1 : 0,
+                    width: isOpen ? "auto" : 0,
+                  }}
+                  transition={{ duration: 0.2 }}
+                  className="overflow-hidden whitespace-nowrap"
+                >
+                  {item.label}
+                </motion.span>
+              </div>
             </Button>
           );
         })}

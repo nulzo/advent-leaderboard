@@ -84,60 +84,96 @@ export function PointsChart({ data }: { data: LeaderboardData }) {
   }, [data, searchTerm]);
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Star Progress</CardTitle>
-        <CardDescription>
-          Track total stars earned by each member over time
-        </CardDescription>
-        <Input
-          placeholder="Search members..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="max-w-sm"
-        />
+    <Card className="border-2 border-black rounded-none my-12">
+      <CardHeader className="space-y-4 pb-6 border-b-2 border-black">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-2xl font-bold tracking-tight">Progress Overview</CardTitle>
+          <Input
+            placeholder="Filter members..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="max-w-[200px] rounded-none border-2 border-black focus-visible:ring-0 focus-visible:border-black"
+          />
+        </div>
       </CardHeader>
-      <CardContent>
-        <div className="h-[600px] mt-4">
+      <CardContent className="p-8">
+        <div className="h-[400px]">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={processedData}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+            <LineChart 
+              data={processedData}
+              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+            >
+              <CartesianGrid 
+                strokeDasharray="3 3" 
+                vertical={false}
+                stroke="#000"
+                opacity={0.1}
+              />
               <XAxis
                 dataKey="timestamp"
                 tickLine={false}
-                axisLine={false}
-                tickMargin={8}
+                axisLine={{ stroke: '#000', strokeWidth: 2 }}
                 tickFormatter={(value) => {
-                  return new Date(value * 1000).toLocaleString();
+                  return new Date(value * 1000).toLocaleDateString();
                 }}
+                stroke="#000"
+                fontSize={12}
+                fontWeight={500}
               />
               <YAxis
                 tickLine={false}
-                axisLine={false}
-                tickMargin={8}
-                domain={[0, "auto"]}
+                axisLine={{ stroke: '#000', strokeWidth: 2 }}
+                stroke="#000"
+                fontSize={12}
+                fontWeight={500}
                 label={{
-                  value: "Total Stars",
+                  value: "Stars",
                   angle: -90,
                   position: "insideLeft",
+                  offset: -5,
+                  style: {
+                    fontSize: 14,
+                    fontWeight: 600,
+                    fill: '#000'
+                  }
                 }}
               />
               <Tooltip
-                labelFormatter={(value) =>
+                contentStyle={{
+                  backgroundColor: '#fff',
+                  border: '2px solid #000',
+                  borderRadius: 0,
+                  fontSize: 12
+                }}
+                labelStyle={{ fontWeight: 600 }}
+                labelFormatter={(value) => 
                   new Date(value * 1000).toLocaleString()
                 }
               />
-              <Legend />
+              <Legend 
+                verticalAlign="bottom"
+                height={36}
+                iconType="plainline"
+                iconSize={18}
+                wrapperStyle={{
+                  fontSize: 12,
+                  fontWeight: 500
+                }}
+              />
               {filteredMembers.map((memberName, index) => (
                 <Line
                   key={memberName}
-                  type="monotone" // Changed from "stepAfter" to "monotone"
+                  type="monotone"
                   dataKey={memberName}
-                  stroke={`hsl(${
-                    (360 / filteredMembers.length) * index
-                  }, 70%, 50%)`}
-                  strokeWidth={2}
+                  stroke={`hsl(${(360 / filteredMembers.length) * index}, 70%, 45%)`}
+                  strokeWidth={2.5}
                   dot={false}
+                  activeDot={{ 
+                    stroke: '#000',
+                    strokeWidth: 2,
+                    fill: '#fff',
+                    r: 4
+                  }}
                 />
               ))}
             </LineChart>
