@@ -10,13 +10,6 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { LeaderboardData } from "@/types/members";
 
@@ -50,47 +43,86 @@ export function TimeEfficiency({ data }: { data: LeaderboardData }) {
   }, [data, searchTerm]);
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Time Efficiency Analysis</CardTitle>
-        <CardDescription>
-          Success rate vs average completion time
-        </CardDescription>
-        <Input
-          placeholder="Filter members..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="max-w-sm"
-        />
-      </CardHeader>
-      <CardContent>
-        <div className="h-[500px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={processedData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="day" />
-              <YAxis yAxisId="left" label={{ value: "Success Rate (%)", angle: -90, position: "insideLeft" }} />
-              <YAxis yAxisId="right" orientation="right" label={{ value: "Avg Time (min)", angle: 90, position: "insideRight" }} />
-              <Tooltip />
-              <Legend />
-              <Line
-                yAxisId="left"
-                type="monotone"
-                dataKey="successRate"
-                stroke="hsl(var(--primary))"
-                name="Success Rate"
-              />
-              <Line
-                yAxisId="right"
-                type="monotone"
-                dataKey="avgTime"
-                stroke="hsl(var(--secondary))"
-                name="Average Time"
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </CardContent>
-    </Card>
+    <>
+      <Input
+        placeholder="Filter members..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="border-foreground focus-visible:border-foreground border rounded focus-visible:ring-0 max-w-sm"
+      />
+      <div className="mt-12 h-[500px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={processedData}>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--foreground))" opacity={0.1} />
+            <XAxis
+              dataKey="day"
+              tickLine={false}
+              axisLine={{ stroke: 'hsl(var(--foreground))', strokeWidth: 2 }}
+              stroke='hsl(var(--foreground))'
+              fontSize={12}
+              fontWeight={500}
+            />
+            <YAxis
+              yAxisId="left"
+              tickLine={false}
+              axisLine={{ stroke: 'hsl(var(--foreground))', strokeWidth: 2 }}
+              label={{
+                value: "Success Rate (%)",
+                angle: -90,
+                position: "insideLeft",
+                style: { fontSize: 14, fontWeight: 600, fill: 'hsl(var(--foreground))' }
+              }}
+            />
+            <YAxis
+              yAxisId="right"
+              orientation="right"
+              tickLine={false}
+              axisLine={{ stroke: 'hsl(var(--foreground))', strokeWidth: 2 }}
+              label={{
+                value: "Avg Time (min)",
+                angle: 90,
+                position: "insideRight",
+                style: { fontSize: 14, fontWeight: 600, fill: 'hsl(var(--foreground))' }
+              }}
+            />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: 'hsl(var(--background))',
+                border: '2px solid hsl(var(--foreground))',
+                borderRadius: 5,
+                fontSize: 12
+              }}
+              labelStyle={{ fontWeight: 600 }}
+            />
+            <Legend
+              verticalAlign="bottom"
+              height={36}
+              iconType="plainline"
+              iconSize={18}
+              wrapperStyle={{
+                fontSize: 12,
+                fontWeight: 500
+              }}
+            />
+            <Line
+              yAxisId="left"
+              type="monotone"
+              dataKey="successRate"
+              stroke="hsl(var(--foreground))"
+              strokeWidth={2}
+              name="Success Rate"
+            />
+            <Line
+              yAxisId="right"
+              type="monotone"
+              dataKey="avgTime"
+              stroke="hsl(var(--foreground))"
+              strokeWidth={2}
+              name="Average Time"
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    </>
   );
 }

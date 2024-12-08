@@ -59,37 +59,31 @@ export function LeaderboardHeatmap({ data }: { data: LeaderboardData }) {
 
   return (
     <TooltipProvider>
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle>Completion Heatmap</CardTitle>
-          <CardDescription>
-            Track daily puzzle completion progress for each member
-          </CardDescription>
-          <Input
-            placeholder="Search members..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="max-w-sm"
-          />
-        </CardHeader>
-        <CardContent className="p-6">
-          <div className="relative w-full overflow-x-auto">
+      <Input
+        placeholder="Filter members..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="border-2 border-foreground focus-visible:border-foreground mb-8 rounded-none focus-visible:ring-0 max-w-sm"
+      />
+      <div className="pt-12">
+        <div className="relative w-full overflow-x-auto">
+          <div className="inline-grid w-full">
             <div className="inline-grid w-full">
               {/* Days header */}
-              <div className="grid grid-cols-[200px_repeat(25,minmax(32px,1fr))] gap-1 cursor-default">
+              <div className="gap-1 grid grid-cols-[200px_repeat(25,minmax(32px,1fr))] cursor-default">
                 <div /> {/* Empty cell for alignment */}
                 {Array.from({ length: 25 }, (_, i) => (
-                  <div key={i + 1} className="text-sm font-medium text-center">
+                  <div key={i + 1} className="font-medium text-center text-sm">
                     {i + 1}
                   </div>
                 ))}
               </div>
 
               {/* Heatmap grid */}
-              <div className="grid grid-cols-[200px_repeat(25,minmax(32px,1fr))] gap-1 cursor-default">
+              <div className="gap-1 grid grid-cols-[200px_repeat(25,minmax(32px,1fr))] cursor-default">
                 {filteredData.map((member) => (
                   <>
-                    <div className="right-0 py-2 pr-4 text-sm font-medium bg-background z-10 text-right">
+                    <div className="right-0 text-right z-10 bg-background py-2 pr-4 font-medium text-sm">
                       {member.name}
                     </div>
 
@@ -110,7 +104,7 @@ export function LeaderboardHeatmap({ data }: { data: LeaderboardData }) {
                             )}
                           />
                         </TooltipTrigger>
-                        <TooltipContent className="bg-popover text-popover-foreground border border-border">
+                        <TooltipContent className="bg-popover border border-border text-popover-foreground">
                           <div className="text-xs">
                             <p className="font-medium">{member.name}</p>
                             <p>
@@ -141,8 +135,8 @@ export function LeaderboardHeatmap({ data }: { data: LeaderboardData }) {
               </div>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </TooltipProvider>
   );
 }

@@ -10,23 +10,23 @@ export const paths = {
         getHref: () => '/leaderboard',
       },
       delta: {
-        path: 'delta',
+        path: '/leaderboard/delta',
         getHref: () => 'leaderboard/delta',
       },
       heatmap: {
-        path: 'heatmap',
+        path: '/leaderboard/heatmap',
         getHref: () => 'leaderboard/heatmap',
       },
       points: {
-        path: 'points',
+        path: '/leaderboard/points',
         getHref: () => 'leaderboard/points',
       },
       stars: {
-        path: 'stars',
+        path: '/leaderboard/stars',
         getHref: () => 'leaderboard/stars',
       },
       table: {
-        path: 'table',
+        path: '/leaderboard/table',
         getHref: () => 'leaderboard/table',
       },
     },

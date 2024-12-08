@@ -8,6 +8,7 @@ import {
   ZAxis,
   Tooltip,
   ResponsiveContainer,
+  CartesianGrid,
 } from "recharts";
 import {
   Card,
@@ -42,53 +43,79 @@ export function TimeHeatmap({ data }: { data: LeaderboardData }) {
   }, [data]);
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Time Completion Heatmap</CardTitle>
-        <CardDescription>
-          Visualizing completion patterns by hour and day
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="h-[600px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-              <XAxis 
-                type="number" 
-                dataKey="day" 
-                name="Day" 
-                domain={[1, 25]}
-                tickFormatter={(value) => `Day ${value}`}
-              />
-              <YAxis 
-                type="number" 
-                dataKey="hour" 
-                name="Hour" 
-                domain={[0, 23]}
-                tickFormatter={(value) => `${value}:00`}
-              />
-              <ZAxis 
-                type="number" 
-                dataKey="value" 
-                range={[50, 400]} 
-                name="Time Delta"
-              />
-              <Tooltip 
-                cursor={{ strokeDasharray: '3 3' }}
-                formatter={(value, name, props) => {
-                  if (name === "Hour") return `${value}:00`;
-                  if (name === "Time Delta") return `${Math.round(Number(value))} minutes`;
-                  return value;
-                }}
-              />
-              <Scatter 
-                data={processedData} 
-                fill="hsl(var(--primary))"
-              />
-            </ScatterChart>
-          </ResponsiveContainer>
-        </div>
-      </CardContent>
-    </Card>
+
+    <div className="pt-12">
+      <ResponsiveContainer width="100%" height="100%">
+        <ScatterChart margin={{ top: 20, right: 20, bottom: 40, left: 40 }}>
+          <CartesianGrid
+            strokeDasharray="3 3"
+            vertical={false}
+            stroke="hsl(var(--foreground))"
+            opacity={0.1}
+          />
+          <XAxis
+            type="number"
+            dataKey="day"
+            domain={[1, 25]}
+            label={{
+              value: "Day Number",
+              position: "bottom",
+              offset: 20,
+              style: {
+                fontSize: 14,
+                fontWeight: 600,
+                fill: 'hsl(var(--foreground))',
+                fontFamily: 'ui-monospace, monospace'
+              }
+            }}
+            tickLine={false}
+            axisLine={{ stroke: 'hsl(var(--foreground))', strokeWidth: 2 }}
+          />
+          <YAxis
+            type="number"
+            dataKey="hour"
+            domain={[0, 23]}
+            label={{
+              value: "Hour of Day",
+              angle: -90,
+              position: "insideLeft",
+              style: {
+                fontSize: 14,
+                fontWeight: 600,
+                fill: 'hsl(var(--foreground))',
+                fontFamily: 'ui-monospace, monospace'
+              }
+            }}
+            tickFormatter={(value) => `${value}:00`}
+            tickLine={false}
+            axisLine={{ stroke: 'hsl(var(--foreground))', strokeWidth: 2 }}
+          />
+          <ZAxis
+            type="number"
+            dataKey="value"
+            range={[50, 400]}
+          />
+          <Tooltip
+            cursor={{ strokeDasharray: '3 3' }}
+            contentStyle={{
+              backgroundColor: 'hsl(var(--background))',
+              border: '2px solid hsl(var(--foreground))',
+              borderRadius: 5,
+              fontSize: 12,
+              fontFamily: 'ui-monospace, monospace'
+            }}
+            formatter={(value, name) => {
+              if (name === "hour") return `${value}:00`;
+              if (name === "value") return `${Math.round(Number(value))} minutes`;
+              return value;
+            }}
+          />
+          <Scatter
+            data={processedData}
+            fill="hsl(var(--foreground))"
+          />
+        </ScatterChart>
+      </ResponsiveContainer>
+    </div>
   );
 }

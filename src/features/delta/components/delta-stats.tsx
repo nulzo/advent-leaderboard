@@ -1,14 +1,5 @@
 import { LeaderboardData, Member } from "@/types/members";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  LineChart,
-  Line,
   AreaChart,
   Area,
   XAxis,
@@ -52,13 +43,6 @@ export function DeltaFocusedStats({ data }: { data: LeaderboardData }) {
     return primaryValue; // Returns something like "222.2 47.4% 11.2%"
   };
 
-  const getPrimaryColorWithOpacity = (index: number) => {
-    const opacity = Math.max(0.1, 1 - (index / (totalMembers - 1)) * 0.9);
-    const opacityFormatted = Math.round(opacity * 100) / 100;
-    const hslValues = getPrimaryHSLValues();
-    return `hsl(${hslValues} / ${opacityFormatted})`;
-  };
-
   const chartConfig = chartData.reduce((acc, member, index) => {
     const hslValues = getPrimaryHSLValues();
     const opacity = Math.max(0.1, 1 - (index / (totalMembers - 1)) * 0.9);
@@ -70,74 +54,67 @@ export function DeltaFocusedStats({ data }: { data: LeaderboardData }) {
   }, {} as Record<string, { label: string; color: string }>);
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Delta Focused Stats</CardTitle>
-        <CardDescription>
-          Time difference between first and second star for each day
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ResponsiveContainer width="100%" height={400}>
-          <AreaChart>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} />
-            <XAxis
-              dataKey="day"
-              type="category"
-              allowDuplicatedCategory={false}
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
+
+    <div className="pt-12 h-[600px]">
+      <ResponsiveContainer width="100%" height="100%">
+        <AreaChart>
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--foreground))" opacity={0.1} />
+          <XAxis
+            dataKey="day"
+            tickLine={false}
+            axisLine={{ stroke: 'hsl(var(--foreground))', strokeWidth: 2 }}
+            stroke='hsl(var(--foreground))'
+            tickFormatter={(value) => value.slice(0, 3)}
+            fontSize={12}
+            fontWeight={500}
+          />
+          <YAxis
+            tickLine={false}
+            axisLine={{ stroke: 'hsl(var(--foreground))', strokeWidth: 2 }}
+            stroke='hsl(var(--foreground))'
+            fontSize={12}
+            fontWeight={500}
+            label={{
+              value: "Time (minutes)",
+              angle: -90,
+              position: "insideLeft",
+              style: { fontSize: 14, fontWeight: 600, fill: 'hsl(var(--foreground))' }
+            }}
+          />
+          <Tooltip
+            contentStyle={{
+              backgroundColor: 'hsl(var(--background))',
+              border: '2px solid hsl(var(--foreground))',
+              borderRadius: 5,
+              fontSize: 12
+            }}
+            labelStyle={{ fontWeight: 600 }}
+          />
+          <Legend
+            verticalAlign="bottom"
+            height={36}
+            iconType="plainline"
+            iconSize={18}
+            wrapperStyle={{
+              fontSize: 12,
+              fontWeight: 500
+            }}
+          />
+          {chartData.map((member) => (
+            <Area
+              key={member.name}
+              data={member.data}
+              type="monotone"
+              dataKey="timeDelta"
+              name={member.name}
+              stroke={chartConfig[member.name].color}
+              fill={chartConfig[member.name].color}
+              fillOpacity={0.1}
+              strokeWidth={2}
             />
-            <YAxis
-              label={{
-                value: "Time (minutes)",
-                angle: -90,
-                position: "insideLeft",
-              }}
-            />
-            <Tooltip />
-            <Legend />
-            <defs>
-              {chartData.map((member, index) => (
-                <linearGradient
-                  key={member.name}
-                  id={`gradient-${member.name}`}
-                  x1="0"
-                  y1="0"
-                  x2="0"
-                  y2="1"
-                >
-                  <stop
-                    offset="5%"
-                    stopColor={chartConfig[member.name].color}
-                    stopOpacity={0.8}
-                  />
-                  <stop
-                    offset="95%"
-                    stopColor={chartConfig[member.name].color}
-                    stopOpacity={0.1}
-                  />
-                </linearGradient>
-              ))}
-            </defs>
-            {chartData.map((member) => (
-              <Area
-                key={member.name}
-                data={member.data}
-                type="monotone"
-                dataKey="timeDelta"
-                name={member.name}
-                stroke={chartConfig[member.name].color}
-                fill={chartConfig[member.name].color}
-                fillOpacity={0.25}
-                strokeWidth={2}
-              />
-            ))}
-          </AreaChart>
-        </ResponsiveContainer>
-      </CardContent>
-    </Card>
+          ))}
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
   );
 }

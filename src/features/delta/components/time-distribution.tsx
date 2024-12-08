@@ -1,13 +1,13 @@
 // src/features/analytics/components/time-distribution.tsx
 import * as React from "react";
 import {
-  BoxPlot,
   ScatterChart,
   XAxis,
   YAxis,
   Tooltip,
   Scatter,
   ResponsiveContainer,
+  CartesianGrid,
 } from "recharts";
 import {
   Card,
@@ -48,52 +48,74 @@ export function TimeDistribution({ data }: { data: LeaderboardData }) {
   }, [data, selectedDay]);
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Solve Time Distribution</CardTitle>
-        <CardDescription>
-          Time patterns across days and members
-        </CardDescription>
-        <Select value={selectedDay} onValueChange={setSelectedDay}>
-          <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="Select day" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Days</SelectItem>
-            {Array.from({ length: 25 }, (_, i) => (
-              <SelectItem key={i + 1} value={(i + 1).toString()}>
-                Day {i + 1}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+    <Card className="border-2 border-foreground rounded-none">
+      <CardHeader className="space-y-4 border-foreground pb-6">
+        <div className="flex flex-col space-y-2">
+          <CardTitle className="font-bold text-2xl tracking-tight">Distribution Analysis</CardTitle>
+          <CardDescription className="font-medium text-sm">
+            Correlation between first and second star completion times
+          </CardDescription>
+        </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-8">
         <div className="h-[500px]">
           <ResponsiveContainer width="100%" height="100%">
-            <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-              <XAxis 
-                type="number" 
-                dataKey="x" 
-                name="Hour of Day" 
-                domain={[0, 24]}
-                tickFormatter={(value) => `${value}:00`}
+            <ScatterChart margin={{ top: 20, right: 20, bottom: 40, left: 40 }}>
+              <CartesianGrid
+                strokeDasharray="3 3" 
+                vertical={false} 
+                stroke="hsl(var(--foreground))" 
+                opacity={0.1} 
               />
-              <YAxis 
-                type="number" 
-                dataKey="y" 
-                name="Time Between Stars"
-                label={{ value: "Minutes", angle: -90, position: "insideLeft" }}
+              <XAxis
+                type="number"
+                dataKey="timeToFirst"
+                name="Time to First Star"
+                label={{
+                  value: "Time to First Star (min)",
+                  position: "bottom",
+                  offset: 20,
+                  style: { 
+                    fontSize: 14, 
+                    fontWeight: 600, 
+                    fill: 'hsl(var(--foreground))',
+                    fontFamily: 'ui-monospace, monospace'
+                  }
+                }}
+                tickLine={false}
+                axisLine={{ stroke: 'hsl(var(--foreground))', strokeWidth: 2 }}
               />
-              <Tooltip 
-                formatter={(value, name) => [
-                  `${Math.round(Number(value))} minutes`, 
-                  name === "x" ? "Hour" : "Delta"
-                ]}
+              <YAxis
+                type="number"
+                dataKey="timeToSecond"
+                name="Time to Second Star"
+                label={{
+                  value: "Time to Second Star (min)",
+                  angle: -90,
+                  position: "insideLeft",
+                  style: { 
+                    fontSize: 14, 
+                    fontWeight: 600, 
+                    fill: 'hsl(var(--foreground))',
+                    fontFamily: 'ui-monospace, monospace'
+                  }
+                }}
+                tickLine={false}
+                axisLine={{ stroke: 'hsl(var(--foreground))', strokeWidth: 2 }}
+              />
+              <Tooltip
+                cursor={{ strokeDasharray: '3 3' }}
+                contentStyle={{
+                  backgroundColor: 'hsl(var(--background))',
+                  border: '2px solid hsl(var(--foreground))',
+                  borderRadius: 5,
+                  fontSize: 12,
+                  fontFamily: 'ui-monospace, monospace'
+                }}
               />
               <Scatter 
                 data={processedData} 
-                fill="hsl(var(--primary))"
+                fill="hsl(var(--foreground))"
               />
             </ScatterChart>
           </ResponsiveContainer>

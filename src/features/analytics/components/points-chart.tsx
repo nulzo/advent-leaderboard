@@ -84,15 +84,15 @@ export function PointsChart({ data }: { data: LeaderboardData }) {
   }, [data, searchTerm]);
 
   return (
-    <Card className="border-2 border-black rounded-none my-12">
-      <CardHeader className="space-y-4 pb-6 border-b-2 border-black">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-2xl font-bold tracking-tight">Progress Overview</CardTitle>
+    <Card className="border-2 border-foreground my-12 rounded-none">
+      <CardHeader className="space-y-4 border-foreground pb-6 border-b-2">
+        <div className="flex justify-between items-center">
+          <CardTitle className="font-bold text-2xl tracking-tight">Progress Overview</CardTitle>
           <Input
             placeholder="Filter members..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="max-w-[200px] rounded-none border-2 border-black focus-visible:ring-0 focus-visible:border-black"
+            className="border-2 border-foreground focus-visible:border-foreground rounded-none focus-visible:ring-0 max-w-[200px]"
           />
         </div>
       </CardHeader>

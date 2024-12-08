@@ -7,6 +7,7 @@ import { MainErrorFallback } from '@/components/errors/main';
 import { LoaderCircle } from 'lucide-react';
 import { queryConfig } from '@/lib/react-query';
 import { LeaderboardProvider } from '@/features/leaderboard/context/leaderboard-context';
+import { ThemeProvider } from '@/components/theme-provider';
 
 
 type AppProviderProps = {
@@ -14,29 +15,31 @@ type AppProviderProps = {
 };
 
 export const AppProvider = ({ children }: AppProviderProps) => {
-    const [queryClient] = React.useState(
-        () =>
-          new QueryClient({
-            defaultOptions: queryConfig,
-          }),
-      );
+  const [queryClient] = React.useState(
+    () =>
+      new QueryClient({
+        defaultOptions: queryConfig,
+      }),
+  );
 
   return (
     <React.Suspense
       fallback={
-        <div className="flex h-screen w-screen items-center justify-center">
-          <LoaderCircle className='size-6 animate-spin' />
+        <div className="flex justify-center items-center w-screen h-screen">
+          <LoaderCircle className='animate-spin size-6' />
         </div>
       }
     >
       <ErrorBoundary FallbackComponent={MainErrorFallback}>
         <HelmetProvider>
-          <QueryClientProvider client={queryClient}>
-          <LeaderboardProvider>
-            {import.meta.env.DEV && <ReactQueryDevtools />}
-              {children}
+          <ThemeProvider>
+            <QueryClientProvider client={queryClient}>
+              <LeaderboardProvider>
+                {import.meta.env.DEV && <ReactQueryDevtools />}
+                {children}
               </LeaderboardProvider>
-          </QueryClientProvider>
+            </QueryClientProvider>
+          </ThemeProvider>
         </HelmetProvider>
       </ErrorBoundary>
     </React.Suspense>
