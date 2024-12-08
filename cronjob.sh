@@ -5,14 +5,25 @@ set -a
 source .env
 set +a
 
-# Run the update script (choose one of these options):
-# Option 1: Using ts-node directly (development)
+# Create logs directory if it doesn't exist
 mkdir -p logs
+
+# Log start time
 echo "[$(date)] Running update script..." >> logs/cron.log
-npm run update-data >> logs/cron.log 2>&1
-echo "[$(date)] Finished update script" >> logs/cron.log
+
+# Fetch data and update file
+curl -s -H "Cookie: session=${AOC_SESSION_COOKIE}" \
+     "https://adventofcode.com/2024/leaderboard/private/view/1858329.json" \
+     | jq '.' > temp.json
+
+# Check if curl was successful
+if [ $? -eq 0 ]; then
+    # Create the TypeScript file with the data
+    echo "export const data = $(cat temp.json);" > src/data/true-data.ts
+    rm temp.json
+    echo "[$(date)] Successfully updated data file" >> logs/cron.log
+else
+    echo "[$(date)] Error: Failed to fetch data" >> logs/cron.log
+fi
+
 echo "----------------------------------------" >> logs/cron.log
-
-
-# Option 2: Using compiled JavaScript (production)
-# node dist/api/update-data.js >> /var/log/aoc-cron.log 2>&1
