@@ -1,12 +1,29 @@
-
 import { LeaderboardTable } from '@/features/leaderboard/components/leaderboard-table'
-import { data } from "@/data/true-data";
+import { useLeaderboard } from '@/features/leaderboard/hooks/use-leaderboard';
+import { DataState } from '@/components/data-state';
 
 export function TableRoute() {
+  const { data, isLoading, error } = useLeaderboard();
+
   return (
-    <div className="space-y-8">
-      <h1 className="font-bold text-4xl">Points Progress</h1>
-      <LeaderboardTable data={data} />
-    </div>
+    <article className="max-w-6xl">
+      {/* Title Block */}
+      <header className="mb-16">
+        <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-4">
+          Raw Data
+        </div>
+        <h1 className="text-5xl md:text-7xl font-bold tracking-tighter leading-[0.9] mb-6">
+          Participant<br />Data
+        </h1>
+        <p className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
+          Complete tabular view of all participant statistics including scores, star counts, 
+          and solve time metrics. Sortable and searchable for detailed analysis.
+        </p>
+      </header>
+
+      <DataState isLoading={isLoading} error={error}>
+        {data && <LeaderboardTable data={data} />}
+      </DataState>
+    </article>
   );
 }

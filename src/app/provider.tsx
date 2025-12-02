@@ -6,9 +6,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { MainErrorFallback } from '@/components/errors/main';
 import { LoaderCircle } from 'lucide-react';
 import { queryConfig } from '@/lib/react-query';
-import { LeaderboardProvider } from '@/features/leaderboard/context/leaderboard-context';
 import { ThemeProvider } from '@/components/theme-provider';
-
 
 type AppProviderProps = {
   children: React.ReactNode;
@@ -34,10 +32,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         <HelmetProvider>
           <ThemeProvider>
             <QueryClientProvider client={queryClient}>
-              <LeaderboardProvider>
-                {import.meta.env.DEV && <ReactQueryDevtools />}
-                {children}
-              </LeaderboardProvider>
+              {import.meta.env.DEV && <ReactQueryDevtools />}
+              {children}
             </QueryClientProvider>
           </ThemeProvider>
         </HelmetProvider>

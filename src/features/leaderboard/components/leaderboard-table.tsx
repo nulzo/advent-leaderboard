@@ -10,7 +10,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { LeaderboardData, Member } from "@/types/members"
-import { ChevronDown, ChevronUp } from "lucide-react"
+import { ChevronDown, ChevronUp, Search } from "lucide-react"
 
 type SortConfig = {
   key: keyof Member | 'avgSolveTime'
@@ -85,96 +85,94 @@ export function LeaderboardTable({ data }: { data: LeaderboardData }) {
 
   const SortIndicator = ({ column }: { column: SortConfig['key'] }) => {
     if (sortConfig.key !== column) return null
-    return sortConfig.direction === 'desc' ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />
+    return sortConfig.direction === 'desc' ? <ChevronDown className="w-3 h-3" /> : <ChevronUp className="w-3 h-3" />
   }
 
   return (
-    <div className="space-y-4">
-      <Input
-        placeholder="Search members..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="max-w-sm"
-      />
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="flex items-center space-x-4 border border-input px-3 py-1 bg-background focus-within:ring-1 ring-ring transition-all">
+        <Search className="w-4 h-4 text-muted-foreground" />
+        <Input
+          placeholder="SEARCH MEMBERS..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="border-none shadow-none focus-visible:ring-0 px-0 h-9 uppercase placeholder:text-xs"
+        />
+      </div>
       
-      <div className="rounded-lg border bg-white shadow">
+      <div className="border border-border bg-card">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">Rank</TableHead>
+            <TableRow className="hover:bg-transparent">
+              <TableHead className="w-[80px]">Rank</TableHead>
               <TableHead>
-                <Button 
-                  variant="ghost" 
+                <div 
                   onClick={() => handleSort('name')}
-                  className="flex items-center gap-1"
+                  className="flex items-center gap-2 cursor-pointer hover:text-foreground transition-colors"
                 >
                   Name
                   <SortIndicator column="name" />
-                </Button>
+                </div>
               </TableHead>
               <TableHead>
-                <Button 
-                  variant="ghost" 
+                <div 
                   onClick={() => handleSort('stars')}
-                  className="flex items-center gap-1"
+                  className="flex items-center gap-2 cursor-pointer hover:text-foreground transition-colors"
                 >
                   Stars
                   <SortIndicator column="stars" />
-                </Button>
+                </div>
               </TableHead>
               <TableHead>
-                <Button 
-                  variant="ghost" 
+                <div 
                   onClick={() => handleSort('local_score')}
-                  className="flex items-center gap-1"
+                  className="flex items-center gap-2 cursor-pointer hover:text-foreground transition-colors"
                 >
                   Local Score
                   <SortIndicator column="local_score" />
-                </Button>
+                </div>
               </TableHead>
               <TableHead>
-                <Button 
-                  variant="ghost" 
+                <div 
                   onClick={() => handleSort('global_score')}
-                  className="flex items-center gap-1"
+                  className="flex items-center gap-2 cursor-pointer hover:text-foreground transition-colors"
                 >
                   Global Score
                   <SortIndicator column="global_score" />
-                </Button>
+                </div>
               </TableHead>
               <TableHead>
-                <Button 
-                  variant="ghost" 
+                <div 
                   onClick={() => handleSort('avgSolveTime')}
-                  className="flex items-center gap-1"
+                  className="flex items-center gap-2 cursor-pointer hover:text-foreground transition-colors"
                 >
                   Avg. Solve Time
                   <SortIndicator column="avgSolveTime" />
-                </Button>
+                </div>
               </TableHead>
               <TableHead>Last Star</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {getPaginatedMembers().map((member, index) => (
-              <TableRow key={member.id}>
-                <TableCell className="font-medium">
-                  {(currentPage - 1) * itemsPerPage + index + 1}
+              <TableRow key={member.id} className="group">
+                <TableCell className="font-mono text-muted-foreground group-hover:text-foreground transition-colors">
+                  #{String((currentPage - 1) * itemsPerPage + index + 1).padStart(2, '0')}
                 </TableCell>
-                <TableCell>{member.name}</TableCell>
-                <TableCell>{member.stars}</TableCell>
-                <TableCell>{member.local_score}</TableCell>
-                <TableCell>{member.global_score}</TableCell>
-                <TableCell>
+                <TableCell className="font-bold">{member.name}</TableCell>
+                <TableCell className="font-mono text-accent-foreground/80">{member.stars}</TableCell>
+                <TableCell className="font-mono">{member.local_score}</TableCell>
+                <TableCell className="font-mono">{member.global_score}</TableCell>
+                <TableCell className="font-mono">
                   {member.avgSolveTime > 0 
-                    ? `${member.avgSolveTime.toFixed(1)} mins`
-                    : 'N/A'
+                    ? `${member.avgSolveTime.toFixed(1)}m`
+                    : '-'
                   }
                 </TableCell>
-                <TableCell>
+                <TableCell className="font-mono text-xs text-muted-foreground">
                   {member.last_star_ts 
-                    ? new Date(member.last_star_ts * 1000).toLocaleString()
-                    : 'N/A'
+                    ? new Date(member.last_star_ts * 1000).toLocaleDateString()
+                    : '-'
                   }
                 </TableCell>
               </TableRow>
@@ -183,24 +181,30 @@ export function LeaderboardTable({ data }: { data: LeaderboardData }) {
         </Table>
       </div>
 
-      <div className="flex justify-center gap-2">
-        <Button
-          variant="outline"
-          onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-          disabled={currentPage === 1}
-        >
-          Previous
-        </Button>
-        <div className="flex items-center gap-1">
-          Page {currentPage} of {totalPages}
+      <div className="flex justify-between items-center pt-4 border-t border-border">
+        <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            Page {currentPage} / {totalPages}
         </div>
-        <Button
-          variant="outline"
-          onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-          disabled={currentPage === totalPages}
-        >
-          Next
-        </Button>
+        <div className="flex gap-2">
+            <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+            className="h-8 w-24"
+            >
+            PREVIOUS
+            </Button>
+            <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+            disabled={currentPage === totalPages}
+            className="h-8 w-24"
+            >
+            NEXT
+            </Button>
+        </div>
       </div>
     </div>
   )

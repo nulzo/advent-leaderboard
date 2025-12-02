@@ -1,35 +1,36 @@
 import * as z from 'zod';
 
-const createEnv = () => {
-  const EnvSchema = z.object({
-    AOC_SESSION_ID: z.string(),
-    AOC_API_URL: z.string(),
-  });
+const EnvSchema = z.object({
+  AOC_SESSION_ID: z.string().min(1, 'AOC session ID is required'),
+  AOC_YEAR: z.string().default('2025'),
+  AOC_LEADERBOARD_ID: z.string().default('1858329'),
+});
 
-  const envVars = Object.entries(import.meta.env).reduce<
-    Record<string, string>
-  >((acc, curr) => {
-    const [key, value] = curr;
+const parseEnv = () => {
+  const envVars: Record<string, string> = {};
+  
+  for (const [key, value] of Object.entries(import.meta.env)) {
     if (key.startsWith('VITE_APP_')) {
-      acc[key.replace('VITE_APP_', '')] = value;
+      envVars[key.replace('VITE_APP_', '')] = value;
     }
-    return acc;
-  }, {});
-
-  const parsedEnv = EnvSchema.safeParse(envVars);
-
-  if (!parsedEnv.success) {
-    throw new Error(
-      `Invalid env provided.
-The following variables are missing or invalid:
-${Object.entries(parsedEnv.error.flatten().fieldErrors)
-  .map(([k, v]) => `- ${k}: ${v}`)
-  .join('\n')}
-`,
-    );
   }
 
-  return parsedEnv.data;
+  const result = EnvSchema.safeParse(envVars);
+
+  if (!result.success) {
+    console.error('Environment validation failed:', result.error.flatten().fieldErrors);
+    // Return defaults to prevent app crash - will fail gracefully on API call
+    return {
+      AOC_SESSION_ID: '',
+      AOC_YEAR: '2025',
+      AOC_LEADERBOARD_ID: '1858329',
+    };
+  }
+
+  return result.data;
 };
 
-export const env = createEnv();
+export const env = parseEnv();
+
+// Derived config
+export const AOC_API_PATH = `/api/${env.AOC_YEAR}/leaderboard/private/view/${env.AOC_LEADERBOARD_ID}.json`;

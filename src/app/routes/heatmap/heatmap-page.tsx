@@ -1,89 +1,63 @@
-import { LeaderboardHeatmap } from "@/features/heatmap/components/heatmap"
-import { StarSequenceHeatmap } from "@/features/heatmap/components/star-sequence-heatmap"
-import { StarTimeMatrix } from "@/features/heatmap/components/star-time-matrix"
-import { StarDensityHeatmap } from "@/features/heatmap/components/star-density-heatmap"
-import { StarVelocityHeatmap } from "@/features/heatmap/components/star-velocity-heatmap"
-import { data } from "@/data/true-data"
+import { CompletionMatrix } from "@/features/analytics/components/completion-matrix";
+import { useLeaderboard } from "@/features/leaderboard/hooks/use-leaderboard";
+import { DataState } from "@/components/data-state";
 
 export function LeaderboardHeatmapRoute() {
+  const { data, isLoading, error } = useLeaderboard();
+
   return (
-    <div className="mx-auto px-4 py-12 font-sans container">
-      {/* Header Section */}
-      <header className="border-foreground mb-16 pb-8 border-b-4">
-        <h1 className="mb-6 font-bold font-sans text-5xl md:text-7xl">Heatmap Analysis</h1>
-        <p className="max-w-3xl text-lg md:text-xl leading-relaxed">
-          A detailed visualization of completion patterns and temporal distributions in problem-solving behaviors. 
-          This analysis explores density patterns, sequence relationships, and temporal clustering across participants.
+    <article className="max-w-6xl">
+      {/* Title Block */}
+      <header className="mb-16">
+        <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-4">
+          Section 2
+        </div>
+        <h1 className="text-5xl md:text-7xl font-bold tracking-tighter leading-[0.9] mb-6">
+          Completion<br />Matrix
+        </h1>
+        <p className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
+          A comprehensive visualization of star completion status across all participants and days. 
+          This matrix reveals patterns in participation, persistence, and puzzle engagement.
         </p>
       </header>
 
-      {/* Main Content */}
-      <div className="space-y-24">
-        {/* Section 1: Overview */}
-        <section>
-          <div className="gap-6 grid grid-cols-1 mb-8">
-            <h2 className="font-bold text-3xl">Completion Patterns</h2>
-            <p className="max-w-3xl text-lg leading-relaxed">
-              The primary visualization shows the overall completion status across days,
-              highlighting patterns in problem-solving progression and achievement rates.
-            </p>
-          </div>
-          <LeaderboardHeatmap data={data} />
-        </section>
+      <DataState isLoading={isLoading} error={error}>
+        {data && (
+          <div className="space-y-16">
+            {/* Section 2.1: Matrix */}
+            <section>
+              <div className="border-l-4 border-foreground pl-6 mb-8">
+                <h2 className="text-2xl font-bold mb-2">2.1 Star Completion Status</h2>
+                <p className="text-muted-foreground">
+                  Each cell represents a participant's progress on a given day. Hover for detailed timestamps.
+                </p>
+              </div>
+              <CompletionMatrix data={data} figureNumber="2.1" />
+            </section>
 
-        {/* Section 2: Sequence Analysis */}
-        <section>
-          <div className="gap-16 grid grid-cols-1 md:grid-cols-2">
-            <div>
-              <h2 className="mb-6 font-bold text-3xl">Sequence Patterns</h2>
-              <p className="mb-8 text-lg leading-relaxed">
-                Analysis of star completion sequences reveals patterns in 
-                problem-solving approaches and solution strategies.
-              </p>
-              <StarSequenceHeatmap data={data} />
-            </div>
-            <div>
-              <h2 className="mb-6 font-bold text-3xl">Temporal Matrix</h2>
-              <p className="mb-8 text-lg leading-relaxed">
-                Time-based distribution matrix showing completion clusters
-                and temporal density patterns.
-              </p>
-              <StarTimeMatrix data={data} />
-            </div>
+            {/* Observations */}
+            <section className="border-t-2 border-foreground pt-8">
+              <h3 className="text-sm font-bold uppercase tracking-wider mb-4">Observations</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm text-muted-foreground">
+                <div>
+                  <h4 className="font-bold text-foreground mb-2">Participation Patterns</h4>
+                  <p className="leading-relaxed">
+                    The matrix reveals drop-off patterns as the competition progresses, with early days 
+                    showing higher completion rates. Vertical gaps indicate particularly challenging puzzles.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-bold text-foreground mb-2">Completion Consistency</h4>
+                  <p className="leading-relaxed">
+                    Top performers typically show dense completion patterns with few gaps, while 
+                    casual participants may show sporadic engagement concentrated on weekends.
+                  </p>
+                </div>
+              </div>
+            </section>
           </div>
-        </section>
-
-        {/* Section 3: Density Analysis */}
-        <section>
-          <div className="gap-16 grid grid-cols-1 md:grid-cols-2">
-            <div>
-              <h2 className="mb-6 font-bold text-3xl">Density Distribution</h2>
-              <p className="mb-8 text-lg leading-relaxed">
-                Heat density visualization showing concentration of completions
-                across different time windows and intervals.
-              </p>
-              <StarDensityHeatmap data={data} />
-            </div>
-            <div>
-              <h2 className="mb-6 font-bold text-3xl">Velocity Patterns</h2>
-              <p className="mb-8 text-lg leading-relaxed">
-                Analysis of completion velocity reveals temporal patterns
-                and speed variations across challenges.
-              </p>
-              <StarVelocityHeatmap data={data} />
-            </div>
-          </div>
-        </section>
-
-        {/* Footer / Methodology */}
-        <footer className="border-foreground mt-16 pt-8 border-t-2">
-          <h3 className="mb-4 font-bold text-xl">Methodology</h3>
-          <p className="max-w-3xl text-lg leading-relaxed">
-            Heatmap analysis conducted using normalized completion timestamps across 25 days.
-            Temporal patterns are analyzed using multi-dimensional clustering and density estimation techniques.
-          </p>
-        </footer>
-      </div>
-    </div>
+        )}
+      </DataState>
+    </article>
   );
 }

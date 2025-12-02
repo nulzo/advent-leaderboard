@@ -26,18 +26,26 @@ export const createAppRouter = (queryClient: QueryClient) =>
           },
         },
         {
-          path: paths.app.delta.path,
-          lazy: async () => {
-            const { DeltaRoute } = await import('./routes/delta/delta-page.tsx');
-            return { Component: DeltaRoute };
-          },
-          ErrorBoundary: AppRootErrorBoundary,
-        },
-        {
           path: paths.app.points.path,
           lazy: async () => {
             const { PointsRoute } = await import('./routes/points/points-page.tsx');
             return { Component: PointsRoute };
+          },
+          ErrorBoundary: AppRootErrorBoundary,
+        },
+        {
+          path: paths.app.heatmap.path,
+          lazy: async () => {
+            const { LeaderboardHeatmapRoute } = await import('./routes/heatmap/heatmap-page.tsx');
+            return { Component: LeaderboardHeatmapRoute };
+          },
+          ErrorBoundary: AppRootErrorBoundary,
+        },
+        {
+          path: paths.app.delta.path,
+          lazy: async () => {
+            const { DeltaRoute } = await import('./routes/delta/delta-page.tsx');
+            return { Component: DeltaRoute };
           },
           ErrorBoundary: AppRootErrorBoundary,
         },
@@ -49,21 +57,6 @@ export const createAppRouter = (queryClient: QueryClient) =>
           },
           ErrorBoundary: AppRootErrorBoundary,
         },
-        {
-          path: paths.app.stars.path,
-          lazy: async () => {
-            const { StarsRoute } = await import('./routes/stars/stars-route.tsx');
-            return { Component: StarsRoute };
-          },
-          ErrorBoundary: AppRootErrorBoundary,
-        },
-        {
-          path: paths.app.heatmap.path,
-          lazy: async () => {
-            const { LeaderboardHeatmapRoute } = await import('./routes/heatmap/heatmap-page.tsx');
-            return { Component: LeaderboardHeatmapRoute };
-          }
-        }
       ],
     },
     {
