@@ -1,0 +1,7 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Swiss-style star with sharp geometry -->
+  <path d="M16 2L20.4 10.8H29.6L22.4 16L26.8 24.8L16 19.2L5.2 24.8L9.6 16L2.4 10.8H11.6L16 2Z"
+        fill="#000000"
+        stroke="#000000"
+        stroke-width="0.5"/>
+</svg>
