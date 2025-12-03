@@ -1,10 +1,6 @@
-# Optional: Override default values
-# These are set via --set flags in the workflow, but you can customize here
-
-# Uncomment to override image settings
-# image:
-#   repository: ghcr.io/nulzo/test-app
-#   tag: latest
+image:
+  repository: ghcr.io/nulzo/advent-leaderboard
+  tag: latest
 
 # Resources for Raspberry Pi (conservative defaults)
 resources:
