@@ -1,7 +1,5 @@
 # Stage 1: Build
-# Use --platform=$BUILDPLATFORM to run the build on the runner's native architecture (amd64)
-# This avoids slow QEMU emulation when building for arm64, since static assets are arch-independent
-FROM --platform=$BUILDPLATFORM oven/bun:1 as builder
+FROM oven/bun:1 as builder
 
 WORKDIR /app
 
@@ -19,6 +17,9 @@ ENV VITE_APP_AOC_SESSION_ID=placeholder
 
 # Build the application
 RUN bun run build
+
+# Verify build output exists
+RUN ls -la /app/dist
 
 # Stage 2: Production
 FROM nginx:alpine
