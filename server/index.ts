@@ -11,11 +11,14 @@ app.get('/health', (req, res) => {
 
 // API Proxy
 // Matches /api/... and captures the rest
-app.get('/api/*', async (req, res) => {
+// Express 5 requires explicit parameter naming for wildcards
+app.get('/api/:path(*)', async (req, res) => {
   try {
     // Extract the path meant for AOC
-    // Request to localhost:3000/api/2025/... -> /2025/...
-    const targetPath = req.path.replace(/^\/api/, '');
+    // Request to localhost:3000/api/2025/... -> params.path will be 2025/...
+    // Note: req.params.path might not include leading slash depending on parser
+    const rawPath = req.params.path;
+    const targetPath = rawPath.startsWith('/') ? rawPath : `/${rawPath}`;
     
     if (!targetPath || targetPath === '/') {
       res.status(400).json({ error: 'Invalid path' });
