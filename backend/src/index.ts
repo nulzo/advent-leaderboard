@@ -9,16 +9,12 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// API Proxy
-// Matches /api/... and captures the rest
-// Express 5 requires explicit parameter naming for wildcards
-app.get('/api/:path(*)', async (req, res) => {
+// API Proxy - using app.use to catch all /api/* routes
+app.use('/api', async (req, res) => {
   try {
-    // Extract the path meant for AOC
-    // Request to localhost:3000/api/2025/... -> params.path will be 2025/...
-    // Note: req.params.path might not include leading slash depending on parser
-    const rawPath = req.params.path;
-    const targetPath = rawPath.startsWith('/') ? rawPath : `/${rawPath}`;
+    // req.path will be the path after /api
+    // e.g., /api/2025/leaderboard/... -> req.path = /2025/leaderboard/...
+    const targetPath = req.path;
     
     if (!targetPath || targetPath === '/') {
       res.status(400).json({ error: 'Invalid path' });
@@ -53,5 +49,3 @@ process.on('SIGTERM', () => {
     console.log('HTTP server closed');
   });
 });
-
-
