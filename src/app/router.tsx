@@ -4,7 +4,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { paths } from "@/config/paths";
 import { AppRoot, AppRootErrorBoundary } from "@/app/routes/root";
 
-export const createAppRouter = (queryClient: QueryClient) =>
+export const createAppRouter = (_queryClient: QueryClient) =>
   createBrowserRouter([
     {
       path: paths.home.path,
@@ -21,14 +21,18 @@ export const createAppRouter = (queryClient: QueryClient) =>
         {
           path: paths.app.root.path,
           lazy: async () => {
-            const { LeaderboardRoute } = await import("./routes/leaderboard/leaderboard-page.tsx");
+            const { LeaderboardRoute } = await import(
+              "./routes/leaderboard/leaderboard-page.tsx"
+            );
             return { Component: LeaderboardRoute };
           },
         },
         {
           path: paths.app.points.path,
           lazy: async () => {
-            const { PointsRoute } = await import('./routes/points/points-page.tsx');
+            const { PointsRoute } = await import(
+              "./routes/points/points-page.tsx"
+            );
             return { Component: PointsRoute };
           },
           ErrorBoundary: AppRootErrorBoundary,
@@ -36,7 +40,9 @@ export const createAppRouter = (queryClient: QueryClient) =>
         {
           path: paths.app.heatmap.path,
           lazy: async () => {
-            const { LeaderboardHeatmapRoute } = await import('./routes/heatmap/heatmap-page.tsx');
+            const { LeaderboardHeatmapRoute } = await import(
+              "./routes/heatmap/heatmap-page.tsx"
+            );
             return { Component: LeaderboardHeatmapRoute };
           },
           ErrorBoundary: AppRootErrorBoundary,
@@ -44,7 +50,9 @@ export const createAppRouter = (queryClient: QueryClient) =>
         {
           path: paths.app.delta.path,
           lazy: async () => {
-            const { DeltaRoute } = await import('./routes/delta/delta-page.tsx');
+            const { DeltaRoute } = await import(
+              "./routes/delta/delta-page.tsx"
+            );
             return { Component: DeltaRoute };
           },
           ErrorBoundary: AppRootErrorBoundary,
@@ -52,7 +60,9 @@ export const createAppRouter = (queryClient: QueryClient) =>
         {
           path: paths.app.table.path,
           lazy: async () => {
-            const { TableRoute } = await import('./routes/table/table-page.tsx');
+            const { TableRoute } = await import(
+              "./routes/table/table-page.tsx"
+            );
             return { Component: TableRoute };
           },
           ErrorBoundary: AppRootErrorBoundary,

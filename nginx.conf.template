@@ -1,0 +1,32 @@
+server {
+    listen       80;
+    server_name  localhost;
+
+    location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+        try_files $uri $uri/ /index.html;
+    }
+
+    location /api/ {
+        # Rewrite /api/foo to /foo, as the target is the root of adventofcode.com
+        rewrite ^/api/(.*) /$1 break;
+        
+        proxy_pass https://adventofcode.com;
+        proxy_ssl_server_name on;
+        proxy_set_header Host adventofcode.com;
+        
+        # Inject the session cookie from environment variable
+        proxy_set_header Cookie "session=${AOC_SESSION_ID}";
+        
+        # Pass through other headers if necessary, but usually we want to strip origin/referer 
+        # from the client to avoid leaking the source to AOC if they care, 
+        # but for private leaderboards it usually works fine.
+    }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+}
+
