@@ -57,77 +57,122 @@ export function LeaderboardOverview({ data }: { data: LeaderboardData }) {
   const completionRate = ((totalStars / maxPossibleStars) * 100).toFixed(1);
 
   return (
-    <div className="space-y-16">
-      {/* Hero Metrics */}
-      <section className="grid grid-cols-2 md:grid-cols-4 border-y-2 border-foreground">
-        <div className="p-8 border-r border-foreground last:border-r-0">
-          <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-2">Next Puzzle</div>
-          <div className="text-4xl md:text-5xl font-mono font-bold tracking-tight">{timeToNext}</div>
+    <div className="space-y-8 md:space-y-16">
+      {/* Hero Metrics - responsive grid */}
+      <section className="grid grid-cols-2 lg:grid-cols-4 border-y-2 border-foreground">
+        <div className="p-4 md:p-8 border-r border-foreground lg:last:border-r-0">
+          <div className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.15em] md:tracking-[0.2em] text-muted-foreground mb-1 md:mb-2">
+            Next Puzzle
+          </div>
+          <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-mono font-bold tracking-tight">
+            {timeToNext}
+          </div>
         </div>
-        <div className="p-8 border-r border-foreground last:border-r-0">
-          <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-2">Days Left</div>
-          <div className="text-4xl md:text-5xl font-mono font-bold tracking-tight">{daysRemaining}</div>
+        <div className="p-4 md:p-8 border-r-0 lg:border-r border-foreground">
+          <div className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.15em] md:tracking-[0.2em] text-muted-foreground mb-1 md:mb-2">
+            Days Left
+          </div>
+          <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-mono font-bold tracking-tight">
+            {daysRemaining}
+          </div>
         </div>
-        <div className="p-8 border-r border-foreground last:border-r-0">
-          <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-2">Total Stars</div>
-          <div className="text-4xl md:text-5xl font-mono font-bold tracking-tight">{totalStars}</div>
+        <div className="p-4 md:p-8 border-r border-t lg:border-t-0 border-foreground">
+          <div className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.15em] md:tracking-[0.2em] text-muted-foreground mb-1 md:mb-2">
+            Total Stars
+          </div>
+          <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-mono font-bold tracking-tight">
+            {totalStars}
+          </div>
         </div>
-        <div className="p-8">
-          <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-2">Completion</div>
-          <div className="text-4xl md:text-5xl font-mono font-bold tracking-tight">{completionRate}%</div>
+        <div className="p-4 md:p-8 border-t lg:border-t-0">
+          <div className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.15em] md:tracking-[0.2em] text-muted-foreground mb-1 md:mb-2">
+            Completion
+          </div>
+          <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-mono font-bold tracking-tight">
+            {completionRate}%
+          </div>
         </div>
       </section>
 
-      {/* Leader Spotlight */}
+      {/* Leader Spotlight - responsive */}
       {sortedMembers[0] && (
         <section>
-          <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-4">Current Leader</div>
-          <div className="flex items-baseline gap-6 border-b-4 border-foreground pb-4">
-            <span className="text-6xl md:text-8xl font-bold tracking-tighter">{sortedMembers[0].name}</span>
-            <span className="text-2xl md:text-3xl font-mono text-muted-foreground">{sortedMembers[0].local_score} pts</span>
+          <div className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.15em] md:tracking-[0.2em] text-muted-foreground mb-2 md:mb-4">
+            Current Leader
+          </div>
+          <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-6 border-b-4 border-foreground pb-4">
+            <span className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold tracking-tighter break-all sm:break-normal">
+              {sortedMembers[0].name}
+            </span>
+            <span className="text-xl sm:text-2xl md:text-3xl font-mono text-muted-foreground">
+              {sortedMembers[0].local_score} pts
+            </span>
           </div>
         </section>
       )}
 
-      {/* Two Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-16">
+      {/* Two Column Layout - stacks on mobile */}
+      <div className="grid grid-cols-1 xl:grid-cols-5 gap-8 md:gap-16">
         {/* Rankings Table */}
-        <div className="lg:col-span-2">
-          <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-6">Rankings</div>
-          <Table>
-            <TableHeader>
-              <TableRow className="border-b-2 border-foreground hover:bg-transparent">
-                <TableHead className="w-16 font-bold text-foreground">#</TableHead>
-                <TableHead className="font-bold text-foreground">Participant</TableHead>
-                <TableHead className="text-right font-bold text-foreground">Score</TableHead>
-                <TableHead className="text-right font-bold text-foreground">Stars</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {sortedMembers.map((member, index) => (
-                <TableRow key={member.id} className="border-b border-border hover:bg-muted/30">
-                  <TableCell className="font-mono font-bold">{String(index + 1).padStart(2, '0')}</TableCell>
-                  <TableCell className="font-medium">{member.name}</TableCell>
-                  <TableCell className="text-right font-mono">{member.local_score}</TableCell>
-                  <TableCell className="text-right font-mono">{member.stars}</TableCell>
+        <div className="xl:col-span-2 order-2 xl:order-1">
+          <div className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.15em] md:tracking-[0.2em] text-muted-foreground mb-4 md:mb-6">
+            Rankings
+          </div>
+          <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
+            <Table>
+              <TableHeader>
+                <TableRow className="border-b-2 border-foreground hover:bg-transparent">
+                  <TableHead className="w-12 md:w-16 font-bold text-foreground text-xs md:text-sm">#</TableHead>
+                  <TableHead className="font-bold text-foreground text-xs md:text-sm">Participant</TableHead>
+                  <TableHead className="text-right font-bold text-foreground text-xs md:text-sm">Score</TableHead>
+                  <TableHead className="text-right font-bold text-foreground text-xs md:text-sm">★</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {sortedMembers.map((member, index) => (
+                  <TableRow key={member.id} className="border-b border-border hover:bg-muted/30">
+                    <TableCell className="font-mono font-bold text-xs md:text-sm">
+                      {String(index + 1).padStart(2, '0')}
+                    </TableCell>
+                    <TableCell className="font-medium text-xs md:text-sm max-w-[120px] md:max-w-none truncate">
+                      {member.name}
+                    </TableCell>
+                    <TableCell className="text-right font-mono text-xs md:text-sm">
+                      {member.local_score}
+                    </TableCell>
+                    <TableCell className="text-right font-mono text-xs md:text-sm">
+                      {member.stars}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </div>
 
         {/* Score Distribution Chart */}
-        <div className="lg:col-span-3">
-          <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-6">Score Distribution</div>
-          <div className="h-[400px] border-l-2 border-b-2 border-foreground pl-4 pb-4">
+        <div className="xl:col-span-3 order-1 xl:order-2">
+          <div className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.15em] md:tracking-[0.2em] text-muted-foreground mb-4 md:mb-6">
+            Score Distribution
+          </div>
+          <div className="h-[300px] md:h-[400px] border-l-2 border-b-2 border-foreground pl-2 md:pl-4 pb-2 md:pb-4">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={sortedMembers} layout="vertical" margin={{ top: 0, right: 20, bottom: 0, left: 0 }}>
-                <CartesianGrid strokeDasharray="1 1" horizontal={true} vertical={false} className="stroke-border" />
+              <BarChart 
+                data={sortedMembers} 
+                layout="vertical" 
+                margin={{ top: 0, right: 10, bottom: 0, left: 0 }}
+              >
+                <CartesianGrid 
+                  strokeDasharray="1 1" 
+                  horizontal={true} 
+                  vertical={false} 
+                  className="stroke-border" 
+                />
                 <XAxis 
                   type="number" 
                   tickLine={false}
                   axisLine={false}
-                  tick={{ fontSize: 11, fontFamily: 'var(--font-mono)' }}
+                  tick={{ fontSize: 10, fontFamily: 'var(--font-mono)' }}
                   className="fill-muted-foreground"
                 />
                 <YAxis 
@@ -135,9 +180,10 @@ export function LeaderboardOverview({ data }: { data: LeaderboardData }) {
                   dataKey="name" 
                   tickLine={false}
                   axisLine={false}
-                  tick={{ fontSize: 11 }}
+                  tick={{ fontSize: 10 }}
                   className="fill-foreground"
-                  width={100}
+                  width={80}
+                  tickFormatter={(value) => value.length > 10 ? `${value.slice(0, 10)}…` : value}
                 />
                 <Tooltip 
                   cursor={{ fill: 'var(--color-muted)', opacity: 0.5 }}

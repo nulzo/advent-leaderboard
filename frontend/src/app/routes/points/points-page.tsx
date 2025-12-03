@@ -10,14 +10,14 @@ export function PointsRoute() {
   return (
     <article className="max-w-6xl">
       {/* Title Block */}
-      <header className="mb-16">
-        <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-4">
+      <header className="mb-8 md:mb-16">
+        <div className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.15em] md:tracking-[0.2em] text-muted-foreground mb-2 md:mb-4">
           Section 1
         </div>
-        <h1 className="text-5xl md:text-7xl font-bold tracking-tighter leading-[0.9] mb-6">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold tracking-tighter leading-[0.9] mb-4 md:mb-6">
           Performance<br />Metrics
         </h1>
-        <p className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
+        <p className="text-base md:text-lg lg:text-xl text-muted-foreground max-w-2xl leading-relaxed">
           A quantitative examination of participant progress, solve times, and puzzle difficulty. 
           This analysis explores temporal patterns and performance correlations across the competition.
         </p>
@@ -25,12 +25,12 @@ export function PointsRoute() {
 
       <DataState isLoading={isLoading} error={error}>
         {data && (
-          <div className="space-y-24">
+          <div className="space-y-12 md:space-y-24">
             {/* Section 1.1: Progress Over Time */}
             <section>
-              <div className="border-l-4 border-foreground pl-6 mb-8">
-                <h2 className="text-2xl font-bold mb-2">1.1 Cumulative Progress</h2>
-                <p className="text-muted-foreground">
+              <div className="border-l-2 md:border-l-4 border-foreground pl-4 md:pl-6 mb-6 md:mb-8">
+                <h2 className="text-lg md:text-xl lg:text-2xl font-bold mb-1 md:mb-2">1.1 Cumulative Progress</h2>
+                <p className="text-sm md:text-base text-muted-foreground">
                   Star accumulation over time for top performers, showing competitive dynamics and pace of completion.
                 </p>
               </div>
@@ -39,9 +39,9 @@ export function PointsRoute() {
 
             {/* Section 1.2: Performance Correlation */}
             <section>
-              <div className="border-l-4 border-foreground pl-6 mb-8">
-                <h2 className="text-2xl font-bold mb-2">1.2 Score-Stars Correlation</h2>
-                <p className="text-muted-foreground">
+              <div className="border-l-2 md:border-l-4 border-foreground pl-4 md:pl-6 mb-6 md:mb-8">
+                <h2 className="text-lg md:text-xl lg:text-2xl font-bold mb-1 md:mb-2">1.2 Score-Stars Correlation</h2>
+                <p className="text-sm md:text-base text-muted-foreground">
                   Relationship between total stars earned and local score, with solve time as a tertiary dimension.
                 </p>
               </div>
@@ -50,9 +50,9 @@ export function PointsRoute() {
 
             {/* Section 1.3: Difficulty Analysis */}
             <section>
-              <div className="border-l-4 border-foreground pl-6 mb-8">
-                <h2 className="text-2xl font-bold mb-2">1.3 Puzzle Difficulty</h2>
-                <p className="text-muted-foreground">
+              <div className="border-l-2 md:border-l-4 border-foreground pl-4 md:pl-6 mb-6 md:mb-8">
+                <h2 className="text-lg md:text-xl lg:text-2xl font-bold mb-1 md:mb-2">1.3 Puzzle Difficulty</h2>
+                <p className="text-sm md:text-base text-muted-foreground">
                   Median solve times by day, indicating relative puzzle complexity based on participant performance.
                 </p>
               </div>
@@ -60,9 +60,9 @@ export function PointsRoute() {
             </section>
 
             {/* Methodology */}
-            <footer className="border-t-2 border-foreground pt-8">
-              <h3 className="text-sm font-bold uppercase tracking-wider mb-4">Methodology</h3>
-              <p className="text-sm text-muted-foreground max-w-2xl leading-relaxed">
+            <footer className="border-t-2 border-foreground pt-6 md:pt-8">
+              <h3 className="text-xs md:text-sm font-bold uppercase tracking-wider mb-3 md:mb-4">Methodology</h3>
+              <p className="text-xs md:text-sm text-muted-foreground max-w-2xl leading-relaxed">
                 Performance metrics are calculated from raw completion timestamps. Solve time is defined as 
                 the duration between first and second star acquisition. Difficulty scores combine completion 
                 rate and median solve time to provide a normalized measure of puzzle complexity.
