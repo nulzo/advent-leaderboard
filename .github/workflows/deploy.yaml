@@ -116,7 +116,7 @@ jobs:
             --set "env[0].name=AOC_SESSION_ID" \
             --set "env[0].value=${{ secrets.AOC_SESSION_ID }}" \
             --set "env[1].name=PORT" \
-            --set "env[1].value=3000" \
+            --set-string "env[1].value=3000" \
             --wait --timeout=5m
 
       # Deploy Frontend
