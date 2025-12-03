@@ -117,6 +117,14 @@ jobs:
             --set "env[0].value=${{ secrets.AOC_SESSION_ID }}" \
             --set "env[1].name=PORT" \
             --set-string "env[1].value=3000" \
+            --set livenessProbe.httpGet.path=/health \
+            --set livenessProbe.httpGet.port=3000 \
+            --set livenessProbe.initialDelaySeconds=5 \
+            --set livenessProbe.periodSeconds=10 \
+            --set readinessProbe.httpGet.path=/health \
+            --set readinessProbe.httpGet.port=3000 \
+            --set readinessProbe.initialDelaySeconds=3 \
+            --set readinessProbe.periodSeconds=5 \
             --wait --timeout=5m
 
       # Deploy Frontend
@@ -139,4 +147,12 @@ jobs:
             --set "env[0].value=http://advent-leaderboard-backend-app:3000" \
             --set "env[1].name=DOLLAR" \
             --set "env[1].value=\$" \
+            --set livenessProbe.httpGet.path=/ \
+            --set livenessProbe.httpGet.port=80 \
+            --set livenessProbe.initialDelaySeconds=5 \
+            --set livenessProbe.periodSeconds=10 \
+            --set readinessProbe.httpGet.path=/ \
+            --set readinessProbe.httpGet.port=80 \
+            --set readinessProbe.initialDelaySeconds=3 \
+            --set readinessProbe.periodSeconds=5 \
             --wait --timeout=5m
