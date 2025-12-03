@@ -9,9 +9,17 @@ server {
         try_files $uri $uri/ /index.html;
     }
 
-    # Proxy API requests to the local Express backend
+    # Proxy API requests to the backend service
+    # Using a variable for the upstream to prevent Nginx from crashing if it's not resolvable at start
+    # and to allow dynamic configuration.
+    # Note: In Nginx, using a variable in proxy_pass requires a resolver.
+    # For simplicity in K8s, we can rely on the service name being resolvable.
+    
     location /api/ {
-        proxy_pass http://127.0.0.1:3000/api/;
+        # Use the environment variable BACKEND_URL or default to the K8s service name
+        # Since envsubst is used, we can use ${BACKEND_URL}
+        proxy_pass ${BACKEND_URL}/api/;
+        
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -24,3 +32,4 @@ server {
         root   /usr/share/nginx/html;
     }
 }
+

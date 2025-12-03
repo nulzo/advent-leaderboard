@@ -7,7 +7,8 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  # Base image name, we will append -frontend and -backend
+  IMAGE_BASE: ${{ github.repository }}
 
 jobs:
   build-and-deploy:
@@ -25,7 +26,7 @@ jobs:
         with:
           repository: nulzo/helm-charts
           path: charts-repo
-          token: ${{ secrets.GH_PAT }} # Required for private repos
+          token: ${{ secrets.GH_PAT }}
 
       - name: Tailscale
         uses: tailscale/github-action@v4
@@ -45,26 +46,49 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata
-        id: meta
+      # --- BUILD FRONTEND ---
+      - name: Extract metadata (Frontend)
+        id: meta-frontend
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_BASE }}-frontend
           tags: |
             type=raw,value=${{ github.sha }}
             type=raw,value=latest
 
-      - name: Build and push
+      - name: Build and push (Frontend)
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./frontend
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta-frontend.outputs.tags }}
+          labels: ${{ steps.meta-frontend.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      # --- BUILD BACKEND ---
+      - name: Extract metadata (Backend)
+        id: meta-backend
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_BASE }}-backend
+          tags: |
+            type=raw,value=${{ github.sha }}
+            type=raw,value=latest
+
+      - name: Build and push (Backend)
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-backend.outputs.tags }}
+          labels: ${{ steps.meta-backend.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # --- DEPLOY ---
       - name: Set up kubectl
         uses: azure/setup-kubectl@v4
 
@@ -77,15 +101,40 @@ jobs:
           echo "${{ secrets.KUBECONFIG }}" | base64 -d > $HOME/.kube/config
           chmod 600 $HOME/.kube/config
 
-      - name: Deploy with Helm
+      # Deploy Backend
+      - name: Deploy Backend
         run: |
-          # Install from the checked-out path
-          helm upgrade --install advent-leaderboard ./charts-repo/app \
+          helm upgrade --install advent-leaderboard-backend ./charts-repo/app \
             --namespace default \
-            --values ./values.yaml \
-            --set image.repository=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} \
+            --set image.repository=${{ env.REGISTRY }}/${{ env.IMAGE_BASE }}-backend \
             --set image.tag=${{ github.sha }} \
+            --set image.pullPolicy=Always \
+            --set service.port=3000 \
+            --set service.targetPort=3000 \
+            --set ingress.enabled=false \
+            --set "imagePullSecrets[0].name=ghcr-secret" \
             --set "env[0].name=AOC_SESSION_ID" \
             --set "env[0].value=${{ secrets.AOC_SESSION_ID }}" \
+            --set "env[1].name=PORT" \
+            --set "env[1].value=3000" \
             --wait --timeout=5m
 
+      # Deploy Frontend
+      - name: Deploy Frontend
+        run: |
+          helm upgrade --install advent-leaderboard-frontend ./charts-repo/app \
+            --namespace default \
+            --set image.repository=${{ env.REGISTRY }}/${{ env.IMAGE_BASE }}-frontend \
+            --set image.tag=${{ github.sha }} \
+            --set image.pullPolicy=Always \
+            --set service.port=80 \
+            --set service.targetPort=80 \
+            --set ingress.enabled=true \
+            --set ingress.className=traefik \
+            --set "ingress.hosts[0].host=leaderboard.nulzo.dev" \
+            --set "ingress.hosts[0].paths[0].path=/" \
+            --set "ingress.hosts[0].paths[0].pathType=Prefix" \
+            --set "imagePullSecrets[0].name=ghcr-secret" \
+            --set "env[0].name=BACKEND_URL" \
+            --set "env[0].value=http://advent-leaderboard-backend" \
+            --wait --timeout=5m
