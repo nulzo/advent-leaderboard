@@ -82,17 +82,9 @@ jobs:
           # Install from the checked-out path
           helm upgrade --install advent-leaderboard ./charts-repo/app \
             --namespace default \
+            --values ./values.yaml \
             --set image.repository=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} \
             --set image.tag=${{ github.sha }} \
-            --set image.pullPolicy=Always \
-            --set ingress.enabled=true \
-            --set ingress.className=traefik \
-            --set "ingress.hosts[0].host=leaderboard.nulzo.dev" \
-            --set "ingress.hosts[0].paths[0].path=/" \
-            --set "ingress.hosts[0].paths[0].pathType=Prefix" \
-            --set service.port=80 \
-            --set service.targetPort=80 \
-            --set "imagePullSecrets[0].name=ghcr-secret" \
             --set "env[0].name=AOC_SESSION_ID" \
             --set "env[0].value=${{ secrets.AOC_SESSION_ID }}" \
             --wait --timeout=5m

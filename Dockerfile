@@ -1,5 +1,7 @@
 # Stage 1: Build
-FROM oven/bun:1 as builder
+# Use --platform=$BUILDPLATFORM to run the build on the runner's native architecture (amd64)
+# This avoids slow QEMU emulation when building for arm64, since static assets are arch-independent
+FROM --platform=$BUILDPLATFORM oven/bun:1 as builder
 
 WORKDIR /app
 
