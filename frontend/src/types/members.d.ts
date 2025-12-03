@@ -27,4 +27,8 @@ export interface LeaderboardData {
     };
     owner_id: number;
     event: string;
+    _meta?: {
+        cached: boolean;
+        last_fetched: number;
+    };
 }

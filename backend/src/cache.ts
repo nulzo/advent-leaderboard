@@ -1,6 +1,11 @@
 import NodeCache from 'node-cache';
 import { config } from './config';
 
+interface CachedItem<T> {
+  data: T;
+  fetchedAt: number;
+}
+
 class CacheService {
   private cache: NodeCache;
 
@@ -12,12 +17,16 @@ class CacheService {
     });
   }
 
-  get<T>(key: string): T | undefined {
-    return this.cache.get<T>(key);
+  get<T>(key: string): CachedItem<T> | undefined {
+    return this.cache.get<CachedItem<T>>(key);
   }
 
-  set<T>(key: string, value: T): boolean {
-    return this.cache.set(key, value);
+  set<T>(key: string, data: T): boolean {
+    const item: CachedItem<T> = {
+      data,
+      fetchedAt: Date.now(),
+    };
+    return this.cache.set(key, item);
   }
 
   stats() {
@@ -26,4 +35,3 @@ class CacheService {
 }
 
 export const aocCache = new CacheService(config.cache.ttl);
-

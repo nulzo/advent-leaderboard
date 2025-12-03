@@ -22,8 +22,11 @@ function formatLastUpdated(timestamp: number | undefined): string {
 
 export const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
-  const { dataUpdatedAt, isFetching } = useLeaderboard()
+  const { data, isFetching } = useLeaderboard()
   const { refresh } = useRefreshLeaderboard()
+
+  // Use backend's last_fetched timestamp if available
+  const lastFetched = data?._meta?.last_fetched
 
   return (
     <div className="flex min-h-screen w-full bg-background font-sans text-foreground">
@@ -37,8 +40,8 @@ export const MainLayout = ({ children }: { children: React.ReactNode }) => {
       >
         <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/80 backdrop-blur-md px-6 justify-between">
           <div className="flex items-center gap-3 text-xs text-muted-foreground">
-            <span className="uppercase tracking-wider font-medium">Last Updated:</span>
-            <span className="font-mono">{formatLastUpdated(dataUpdatedAt)}</span>
+            <span className="uppercase tracking-wider font-medium">Backend Refreshed:</span>
+            <span className="font-mono">{formatLastUpdated(lastFetched)}</span>
             <Button 
               variant="ghost" 
               size="icon" 

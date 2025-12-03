@@ -11,10 +11,16 @@ const client = axios.create({
 
 export async function fetchAocData(path: string) {
   // Check cache first
-  const cachedData = aocCache.get(path);
-  if (cachedData) {
-    console.log(`[CACHE HIT] ${path}`);
-    return cachedData;
+  const cached = aocCache.get(path);
+  if (cached) {
+    console.log(`[CACHE HIT] ${path} (fetched at ${new Date(cached.fetchedAt).toISOString()})`);
+    return {
+      ...cached.data,
+      _meta: {
+        cached: true,
+        last_fetched: cached.fetchedAt,
+      }
+    };
   }
 
   console.log(`[CACHE MISS] Fetching ${path}`);
@@ -33,7 +39,13 @@ export async function fetchAocData(path: string) {
     // Cache the successful response
     aocCache.set(path, response.data);
     
-    return response.data;
+    return {
+      ...response.data,
+      _meta: {
+        cached: false,
+        last_fetched: Date.now(),
+      }
+    };
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.error(`[AOC ERROR] ${error.response?.status} ${error.response?.statusText}`);
@@ -42,4 +54,3 @@ export async function fetchAocData(path: string) {
     throw error;
   }
 }
-
