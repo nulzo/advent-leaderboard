@@ -1,7 +1,7 @@
 import * as z from 'zod';
 
 const EnvSchema = z.object({
-  AOC_SESSION_ID: z.string().min(1, 'AOC session ID is required'),
+  // AOC_SESSION_ID is now handled by the backend securely
   AOC_YEAR: z.string().default('2025'),
   AOC_LEADERBOARD_ID: z.string().default('1858329'),
 });
@@ -19,9 +19,7 @@ const parseEnv = () => {
 
   if (!result.success) {
     console.error('Environment validation failed:', result.error.flatten().fieldErrors);
-    // Return defaults to prevent app crash - will fail gracefully on API call
     return {
-      AOC_SESSION_ID: '',
       AOC_YEAR: '2025',
       AOC_LEADERBOARD_ID: '1858329',
     };

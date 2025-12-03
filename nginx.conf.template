@@ -2,26 +2,21 @@ server {
     listen       80;
     server_name  localhost;
 
+    # Serve static files (React App)
     location / {
         root   /usr/share/nginx/html;
         index  index.html index.htm;
         try_files $uri $uri/ /index.html;
     }
 
+    # Proxy API requests to the local Express backend
     location /api/ {
-        # Rewrite /api/foo to /foo, as the target is the root of adventofcode.com
-        rewrite ^/api/(.*) /$1 break;
-        
-        proxy_pass https://adventofcode.com;
-        proxy_ssl_server_name on;
-        proxy_set_header Host adventofcode.com;
-        
-        # Inject the session cookie from environment variable
-        proxy_set_header Cookie "session=${AOC_SESSION_ID}";
-        
-        # Pass through other headers if necessary, but usually we want to strip origin/referer 
-        # from the client to avoid leaking the source to AOC if they care, 
-        # but for private leaderboards it usually works fine.
+        proxy_pass http://127.0.0.1:3000/api/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
     }
 
     error_page   500 502 503 504  /50x.html;
@@ -29,4 +24,3 @@ server {
         root   /usr/share/nginx/html;
     }
 }
-

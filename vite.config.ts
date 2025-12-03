@@ -4,8 +4,6 @@ import tailwindcss from "@tailwindcss/vite"
 import { defineConfig } from "vite"
 
 export default defineConfig(() => {
-  // const env = loadEnv(mode, process.cwd(), '')
-  
   return {
     plugins: [
       react(),
@@ -15,18 +13,13 @@ export default defineConfig(() => {
       alias: {
         "@": path.resolve(__dirname, "./src"),
       },
+      dedupe: ['react', 'react-dom', 'react-router-dom'],
     },
     server: {
       proxy: {
         '/api': {
-          target: 'https://adventofcode.com',
+          target: 'http://localhost:3000',
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, ''),
-          configure: (proxy) => {
-            proxy.on('proxyReq', (proxyReq) => {
-              proxyReq.setHeader('Cookie', `session=${process.env.VITE_APP_AOC_SESSION_ID}`);
-            });
-          },
         },
       },
     },
