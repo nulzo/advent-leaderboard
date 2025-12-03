@@ -7,8 +7,8 @@ import { RefreshCw } from 'lucide-react'
 import { Button } from '../ui/button'
 
 // Sidebar widths - keep in sync with sidebar.tsx
-const SIDEBAR_WIDTH_OPEN = 260;
-const SIDEBAR_WIDTH_CLOSED = 64;
+// const SIDEBAR_WIDTH_OPEN = 260;
+// const SIDEBAR_WIDTH_CLOSED = 64;
 
 function formatLastUpdated(timestamp: number | undefined): string {
   if (!timestamp) return 'Never';
@@ -66,11 +66,11 @@ export const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const lastFetched = data?._meta?.last_fetched
 
   // Calculate content margin based on sidebar state
-  const getContentMargin = () => {
-    if (isMobile) return 'ml-0';
-    if (isSidebarOpen) return `ml-[${SIDEBAR_WIDTH_OPEN}px]`;
-    return `ml-[${SIDEBAR_WIDTH_CLOSED}px]`;
-  };
+  // const getContentMargin = () => {
+  //   if (isMobile) return 'ml-0';
+  //   if (isSidebarOpen) return `ml-[${SIDEBAR_WIDTH_OPEN}px]`;
+  //   return `ml-[${SIDEBAR_WIDTH_CLOSED}px]`;
+  // };
 
   return (
     <div className="min-h-screen w-full bg-background font-sans text-foreground">
