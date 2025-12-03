@@ -26,4 +26,3 @@ service:
 
 imagePullSecrets:
   - name: ghcr-secret
-
