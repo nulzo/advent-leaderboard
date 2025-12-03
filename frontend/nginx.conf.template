@@ -6,25 +6,19 @@ server {
     location / {
         root   /usr/share/nginx/html;
         index  index.html index.htm;
-        try_files $uri $uri/ /index.html;
+        # escaping $uri with ${DOLLAR}uri to prevent envsubst from replacing it
+        try_files ${DOLLAR}uri ${DOLLAR}uri/ /index.html;
     }
 
     # Proxy API requests to the backend service
-    # Using a variable for the upstream to prevent Nginx from crashing if it's not resolvable at start
-    # and to allow dynamic configuration.
-    # Note: In Nginx, using a variable in proxy_pass requires a resolver.
-    # For simplicity in K8s, we can rely on the service name being resolvable.
-    
     location /api/ {
-        # Use the environment variable BACKEND_URL or default to the K8s service name
-        # Since envsubst is used, we can use ${BACKEND_URL}
         proxy_pass ${BACKEND_URL}/api/;
         
         proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Upgrade ${DOLLAR}http_upgrade;
         proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
+        proxy_set_header Host ${DOLLAR}host;
+        proxy_cache_bypass ${DOLLAR}http_upgrade;
     }
 
     error_page   500 502 503 504  /50x.html;
@@ -32,4 +26,3 @@ server {
         root   /usr/share/nginx/html;
     }
 }
-

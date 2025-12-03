@@ -137,4 +137,6 @@ jobs:
             --set "imagePullSecrets[0].name=ghcr-secret" \
             --set "env[0].name=BACKEND_URL" \
             --set "env[0].value=http://advent-leaderboard-backend" \
+            --set "env[1].name=DOLLAR" \
+            --set "env[1].value=\$" \
             --wait --timeout=5m
