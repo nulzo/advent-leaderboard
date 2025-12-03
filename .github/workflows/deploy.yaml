@@ -93,6 +93,7 @@ jobs:
             --set service.port=80 \
             --set service.targetPort=80 \
             --set "imagePullSecrets[0].name=ghcr-secret" \
-            --set env.AOC_SESSION_ID="${{ secrets.AOC_SESSION_ID }}" \
+            --set "env[0].name=AOC_SESSION_ID" \
+            --set "env[0].value=${{ secrets.AOC_SESSION_ID }}" \
             --wait --timeout=5m
 
