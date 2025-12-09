@@ -53,7 +53,7 @@ export function LeaderboardOverview({ data }: { data: LeaderboardData }) {
   }, [data]);
 
   const totalStars = Object.values(data.members).reduce((acc, m) => acc + m.stars, 0);
-  const maxPossibleStars = Object.keys(data.members).length * 50;
+  const maxPossibleStars = Object.keys(data.members).length * 24;
   const completionRate = ((totalStars / maxPossibleStars) * 100).toFixed(1);
 
   return (
