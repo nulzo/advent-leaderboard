@@ -30,7 +30,7 @@ export function LeaderboardOverview({ data }: { data: LeaderboardData }) {
     const updateCountdown = () => {
       const now = new Date();
       const est = new Date(now.toLocaleString("en-US", { timeZone: "America/New_York" }));
-      const dec25 = new Date(est.getFullYear(), 11, 25);
+      const dec25 = new Date(est.getFullYear(), 11, 12);
       const remainingDays = Math.ceil((dec25.getTime() - est.getTime()) / (1000 * 60 * 60 * 24));
       setDaysRemaining(Math.max(0, remainingDays));
 
